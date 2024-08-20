@@ -1,13 +1,30 @@
 import React from 'react'
 import './App.css'
-import { useState } from 'react'
+import { useState ,useEffect} from 'react'
 
-function Boxes({data,setData,boxData,setBoxData,side}) {
+function Boxes({data,setData,boxData,setBoxData,side,setSelected,update}) {
+
+    let [selectedList,setSelectedList] = useState({});
+
+    useEffect(()=>{
+        setSelectedList({});
+
+    },[update])
+
+    useEffect(()=>{
+        for(let flag in selectedList){
+            if(selectedList[flag]){
+                setSelected(true);
+                return;
+            };
+        }
+        setSelected(false);
+    },[selectedList]);
 
 
     let removeItem = (value)=>{
 
-        console.log(boxData);
+        
         let modifiedData = boxData.map((item)=>{
             if(item[0]==value){
                 if(item[1]=="left"){
@@ -19,6 +36,13 @@ function Boxes({data,setData,boxData,setBoxData,side}) {
             return item;
         })
         setBoxData([...modifiedData]);
+
+        if(selectedList[value]){
+            selectedList[value] = !selectedList[value];
+        }else{
+            selectedList[value] = true;
+        }
+        setSelectedList({...selectedList});
     }
 
 
